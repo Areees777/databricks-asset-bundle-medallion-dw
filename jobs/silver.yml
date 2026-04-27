@@ -1,0 +1,8 @@
+resources:
+  jobs:
+    silver-customers:
+      name: silver-customers
+      tasks:
+        - task_key: customers
+          notebook_task:
+            notebook_path: ${workspace.root_path}/src/silver/customers.py
