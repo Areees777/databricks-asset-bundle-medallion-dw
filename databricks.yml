@@ -3,16 +3,12 @@ bundle:
   name: databricks-asset-bundle-medallion-dw
 
 include:
-  - jobs/*.yml
+  - resources/*.yml
 
 targets:
   dev:
     mode: development
     default: true
     workspace:
-      root_path: /Users/ares.argiles@gmail.com/databricks-asset-bundle-medallion-dw/dev
-  
-  prod:
-    mode: production
-    workspace:
-      root_path: /Users/ares.argiles@gmail.com/databricks-asset-bundle-medallion-dw/prod
+      host: https://dbc-5c18f503-bedf.cloud.databricks.com
+      root_path: ~/databricks-asset-bundle-medallion-dw/dev

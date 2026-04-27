@@ -1,8 +1,0 @@
-resources:
-  jobs:
-    bronze-ingest:
-      name: bronze-ingest
-      tasks:
-        - task_key: ingest
-          notebook_task:
-            notebook_path: ${workspace.root_path}/src/bronze/ingest.py
