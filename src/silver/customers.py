@@ -1,12 +1,18 @@
 from pyspark.sql import Window
 from pyspark.sql import functions as F
 
-from utils.utils import upsert_sdc_type_1
+from utils.delta_upsert import DeltaUpsertManager
 
 SRC_TABLE_NAME = "catalog.bronze.sales"
 SILVER_TABLE_NAME = "catalog.silver.customers"
 
 def build_silver_customers(df):
+
+    # A qué responde esta tabla: 
+    # ¿Qué sabemos de un cliente?
+
+    
+
     df_customers = df.select(
         F.col("Customer ID").alias("customer_id"),
         F.col("Customer Name").alias("customer_name"),
@@ -44,8 +50,18 @@ def main():
     df_bronze = spark.table(SRC_TABLE_NAME)
     df_silver = build_silver_customers(df_bronze)
 
-    upsert_sdc_type_1(df_silver, SILVER_TABLE_NAME)
+    upsert_manager = DeltaUpsertManager(spark)
+    upsert_manager.upsert_scd_type1(
+        df_source=df_silver,
+        target_table_name=SILVER_TABLE_NAME,
+        keys=["customer_id"]
+    )
 
 
 if __name__ == "__main__":
     main()
+
+# 1. Crear un .py que se encarge de crear la tabla con su schema en silver en caso de que no exista.
+# 2. Crear un .py que se encargue de hacer el proceso de carga incremental (upsert) a silver.
+# 3. Añadir el paso en silver.yml para que se cree la tarea de crear la tabla y que lance la carga incremental
+# 4. Hacer lo mismo en gold. 

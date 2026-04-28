@@ -10,5 +10,5 @@ targets:
     mode: development
     default: true
     workspace:
-      host: https://dbc-5c18f503-bedf.cloud.databricks.com
+      host: https://dbc-e8d524d4-62e0.cloud.databricks.com
       root_path: ~/databricks-asset-bundle-medallion-dw/dev
