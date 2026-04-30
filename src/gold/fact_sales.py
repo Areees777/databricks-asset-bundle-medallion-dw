@@ -1,6 +1,9 @@
 from pyspark.sql import Window
 from pyspark.sql import functions as F
 
+SRC_TABLE_NAME = "catalog.bronze.sales"
+SILVER_TABLE_NAME = "catalog.silver.orders"
+
 def main():
     df_order_lines = spark.table("catalog.silver.order_lines")
     df_orders = spark.table("catalog.silver.orders")
@@ -34,6 +37,12 @@ def main():
             "f.quantity",
             "f.discount"
         )
+
+    # Terminar de construir la tabla de hechos con las claves foráneas a las dimensiones y las métricas necesarias (quantity, discount, total_amount, etc.)
+    # Escribir la tabla de hechos en formato Delta en el catálogo de Databricks, en la base de datos y con el nombre que corresponda (catalog.gold.fact_sales)
+    # En caso de que no exista la tabla, crearla. En caso de que ya exista, hacer un upsert (merge) para actualizar los datos.
+    # Las claves por las cuales hay que hacer el merge son: order_id y product_id, ya que un mismo pedido puede tener varias líneas de pedido (order lines) 
+    # pero no debería haber líneas de pedido duplicadas para el mismo producto en el mismo pedido (hay que comprobarlo).
 
 if __name__ == "__main__":
     main()

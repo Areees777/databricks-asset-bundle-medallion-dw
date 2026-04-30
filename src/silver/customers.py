@@ -1,7 +1,7 @@
 from pyspark.sql import Window
 from pyspark.sql import functions as F
 
-from utils.delta_upsert import DeltaUpsertManager
+from src.utils.delta_upsert import DeltaUpsertManager
 
 SRC_TABLE_NAME = "catalog.bronze.sales"
 SILVER_TABLE_NAME = "catalog.silver.customers"
@@ -9,9 +9,7 @@ SILVER_TABLE_NAME = "catalog.silver.customers"
 def build_silver_customers(df):
 
     # A qué responde esta tabla: 
-    # ¿Qué sabemos de un cliente?
-
-    
+    # ¿Qué sabemos de un cliente?    
 
     df_customers = df.select(
         F.col("Customer ID").alias("customer_id"),

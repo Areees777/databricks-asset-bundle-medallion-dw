@@ -1,7 +1,7 @@
 from pyspark.sql import Window
 from pyspark.sql import functions as F
 
-from utils.delta_upsert import DeltaUpsertManager
+from src.utils.delta_upsert import DeltaUpsertManager
 
 SRC_TABLE_NAME = "catalog.bronze.sales"
 SILVER_TABLE_NAME = "catalog.silver.orders"

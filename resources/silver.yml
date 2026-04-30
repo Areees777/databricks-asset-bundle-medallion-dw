@@ -1,0 +1,71 @@
+resources:
+  jobs:
+    silver_job:
+      name: silver_job
+
+      job_cluster:
+        - job_cluster_key: shared_cluster
+          new_cluster:
+            spark_version: 13.3.x-scala2.12
+            node_type_id: Standard_D4ds_v4
+            num_workers: 1
+
+      tasks:
+        - task_key: create_silver_products
+          sql_task:
+            warehouse_id: "496c9fcc1465375a"
+            file:
+              path: ../sql/ddl/silver/01_create_products.sql
+
+
+        - task_key: build_silver_products
+          depends_on:
+            - task_key: create_silver_products
+          job_cluster_key: shared_cluster
+          spark_python_task:
+            python_file: ../src/silver/products.py
+
+        
+        - task_key: create_silver_table_orders
+          sql_task:
+            warehouse_id: "496c9fcc1465375a"
+            file:
+              path: ../sql/ddl/silver/02_create_orders.sql
+
+        
+        - task_key: build_silver_orders
+          depends_on:
+            - task_key: create_silver_table_orders
+          job_cluster_key: shared_cluster
+          spark_python_task:
+            python_file: ../src/silver/orders.py
+
+        
+        - task_key: create_silver_table_orders_lines
+          sql_task:
+            warehouse_id: "496c9fcc1465375a"
+            file:
+              path: ../sql/ddl/silver/03_create_order_lines.sql
+
+        
+        - task_key: build_silver_orders_lines
+          depends_on:
+            - task_key: create_silver_table_orders_lines
+          job_cluster_key: shared_cluster
+          spark_python_task:
+            python_file: ../src/silver/orders_lines.py
+
+        
+        - task_key: create_silver_table_customers
+          sql_task:
+            warehouse_id: "496c9fcc1465375a"
+            file:
+              path: ../sql/ddl/silver/04_create_customers.sql
+
+        
+        - task_key: build_silver_customers
+          depends_on:
+            - task_key: create_silver_table_customers
+          job_cluster_key: shared_cluster
+          spark_python_task:
+            python_file: ../src/silver/customers.py

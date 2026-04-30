@@ -3,8 +3,8 @@ from pyspark.sql import functions as F
 
 from utils.delta_upsert import DeltaUpsertManager
 
-SRC_TABLE_NAME = "catalog.silver.customers"
-TGT_TABLE_NAME = "catalog.gold.dim_customer"
+SRC_TABLE_NAME = "databricks_north_europe.silver.customers"
+TGT_TABLE_NAME = "databricks_north_europe.gold.dim_customer"
 
 def main():
     df_source = spark.table(SRC_TABLE_NAME)

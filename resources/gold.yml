@@ -1,0 +1,30 @@
+resources:
+  jobs:
+    gold_job:
+      name: gold_job
+
+      job_clusters:
+          - job_cluster_key: tiny_cluster
+            new_cluster:
+              spark_version: 13.3.x-scala2.12
+              node_type_id: Standard_D4ds_v4
+              num_workers: 1
+      
+      tasks:
+        - task_key: build_gold_dim_date
+          job_cluster_key: tiny_cluster
+          spark_python_task:
+            python_file: ../src/gold/dim_date.py
+        
+        - task_key: create_gold_dim_customer
+          sql_task:
+            warehouse_id: "496c9fcc1465375a"
+            file:
+              path: ../sql/ddl/gold/01_create_dim_customer.sql
+        
+        - task_key: build_gold_dim_customer
+          depends_on:
+            - task_key: create_gold_dim_customer
+          job_cluster_key: tiny_cluster
+          spark_python_task:
+            python_file: ../src/gold/dim_customer.py

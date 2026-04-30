@@ -1,10 +1,10 @@
 from pyspark.sql import Window
 from pyspark.sql import functions as F
 
-from utils.delta_upsert import DeltaUpsertManager
+from src.utils.delta_upsert import DeltaUpsertManager
 
-SRC_TABLE_NAME = "catalog.bronze.sales"
-SILVER_TABLE_NAME = "catalog.silver.products"
+SRC_TABLE_NAME = "databricks_north_europe.bronze.sales"
+SILVER_TABLE_NAME = "databricks_north_europe.silver.products"
 
 def build_silver_products(df):
 
