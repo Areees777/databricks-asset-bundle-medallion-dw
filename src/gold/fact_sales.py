@@ -1,8 +1,9 @@
 from pyspark.sql import Window
 from pyspark.sql import functions as F
+from src.utils.delta_upsert import DeltaUpsertManager
 
 SRC_TABLE_NAME = "catalog.bronze.sales"
-SILVER_TABLE_NAME = "catalog.silver.orders"
+GOLD_TABLE_NAME = "catalog.gold.fact_sales"
 
 def main():
     df_order_lines = spark.table("catalog.silver.order_lines")
@@ -11,6 +12,8 @@ def main():
     dim_customer = spark.table("catalog.gold.dim_customer")
     dim_product  = spark.table("catalog.gold.dim_product")
     dim_date     = spark.table("catalog.gold.dim_date")
+
+    df_fact_base = df_fact_base.filter(F.col("order_date") == F.current_date())
 
     df_fact_base = (
         df_order_lines.alias("ol")
@@ -43,6 +46,13 @@ def main():
     # En caso de que no exista la tabla, crearla. En caso de que ya exista, hacer un upsert (merge) para actualizar los datos.
     # Las claves por las cuales hay que hacer el merge son: order_id y product_id, ya que un mismo pedido puede tener varias líneas de pedido (order lines) 
     # pero no debería haber líneas de pedido duplicadas para el mismo producto en el mismo pedido (hay que comprobarlo).
+
+    upsert_manager = DeltaUpsertManager(spark)
+    upsert_manager.upsert_scd_type1(
+        df_source=df_fact_sales_prod,
+        target_table_name=GOLD_TABLE_NAME,
+        keys=["order_id","product_id"]
+    )
 
 if __name__ == "__main__":
     main()
